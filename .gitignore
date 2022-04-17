@@ -5,6 +5,7 @@
 *.csv
 
 # Data
+samples
 datasets
 logs
 *.npy
