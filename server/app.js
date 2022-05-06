@@ -1,26 +1,67 @@
 import express from 'express';
 import path from 'path';
 import multer from 'multer';
+import util from 'util';
+import child_process from 'child_process';
+
+const exec = util.promisify(child_process.exec);
 
 const __dirname = path.resolve();
 
 const _storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './uploads');
+    cb(null, '../tts-model/datasets/test/audio');
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    cb(null, file.originalname.slice(0, file.originalname.length - 3) + 'wav');
   },
 });
 const upload = multer({ storage: _storage });
 
 const app = express();
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+const sleep = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+app.get('/', async (req, res) => {
+  // const { stdout, stderr } = await exec('pwd');
+
+  // if (stderr) {
+  //   console.error(`error: ${stderr}`);
+  // }
+  // console.log(`Number of files ${stdout}`);
+
+  res.sendFile(
+    'C:\\Users\\Seungheon\\Desktop\\학교자료\\3-1\\공개SW프로젝트\\projects\\2022-1-OSSP2-Bigpie-5\\server\\index.html'
+  );
 });
 
-app.post('/upload', upload.any(), (req, res) => {
+app.post('/upload', upload.any(), async (req, res) => {
+  await sleep(5000);
+
+  {
+    const { stdout, stderr } = await exec(
+      'python -m datasets.generate_data ./datasets/test/alignment.json'
+    );
+
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+    }
+    console.log(`stdout: ${stdout}`);
+  }
+
+  {
+    const { stdout, stderr } = await exec(
+      'python train.py --data_path=datasets/test'
+    );
+
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+    }
+    console.log(`stdout: ${stdout}`);
+  }
+
   // const {
   //   fieldname,
   //   originalname,
