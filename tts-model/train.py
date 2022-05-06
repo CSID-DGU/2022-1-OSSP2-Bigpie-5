@@ -5,6 +5,7 @@ import argparse
 import traceback
 import subprocess
 import numpy as np
+from zmq import device
 from jamo import h2j
 import tensorflow as tf
 from datetime import datetime
@@ -174,10 +175,18 @@ def train(log_dir, config):
     loss_window = ValueWindow(100)
     saver = tf.train.Saver(max_to_keep=5, keep_checkpoint_every_n_hours=2)
 
+    # CPU version training
     sess_config = tf.ConfigProto(
             log_device_placement=False,
             allow_soft_placement=True)
     sess_config.gpu_options.allow_growth=True
+    
+    '''    # GPU version training
+    sess_config = tf.ConfigProto(
+            log_device_placement=False,
+            allow_soft_placement=True,
+            device_count={'GPU':1}) #추가된 부분
+    sess_config.gpu_options.allow_growth=True  '''
 
     # Train!
     #with tf.Session(config=sess_config) as sess:
