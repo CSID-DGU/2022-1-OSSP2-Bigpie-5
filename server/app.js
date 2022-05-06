@@ -3,6 +3,8 @@ import path from 'path';
 import multer from 'multer';
 import util from 'util';
 import child_process from 'child_process';
+import { spawn } from 'child_process';
+// import spawn from 'await-spawn';
 
 const exec = util.promisify(child_process.exec);
 
@@ -25,66 +27,47 @@ const sleep = (ms) => {
 };
 
 app.get('/', async (req, res) => {
-  // const { stdout, stderr } = await exec('pwd');
-
-  // if (stderr) {
-  //   console.error(`error: ${stderr}`);
-  // }
-  // console.log(`Number of files ${stdout}`);
-
-  res.sendFile(
-    'C:\\Users\\Seungheon\\Desktop\\학교자료\\3-1\\공개SW프로젝트\\projects\\2022-1-OSSP2-Bigpie-5\\server\\index.html'
-  );
+  res.sendFile('D:\\projects\\2022-1-OSSP2-Bigpie-5\\server\\index.html');
 });
 
 app.post('/upload', upload.any(), async (req, res) => {
   await sleep(5000);
 
-  {
-    const { stdout, stderr } = await exec(
-      'python -m datasets.generate_data ./datasets/test/alignment.json'
-    );
+  const generateData = spawn('python', [
+    '-m',
+    'datasets.generate_data',
+    './datasets/test/alignment.json',
+  ]);
 
-    if (stderr) {
-      console.error(`stderr: ${stderr}`);
-    }
-    console.log(`stdout: ${stdout}`);
-  }
+  generateData.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
 
-  {
-    const { stdout, stderr } = await exec(
-      'python train.py --data_path=datasets/test'
-    );
+  generateData.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
 
-    if (stderr) {
-      console.error(`stderr: ${stderr}`);
-    }
-    console.log(`stdout: ${stdout}`);
-  }
+  generateData.on('close', (code) => {
+    console.log(`child process exited with code ${code}`);
+  });
 
-  // const {
-  //   fieldname,
-  //   originalname,
-  //   encoding,
-  //   mimetype,
-  //   destination,
-  //   filename,
-  //   path,
-  //   size,
-  // } = req.file;
-  // const { name } = req.body;
+  await sleep(10000);
 
-  // console.log('body 데이터 : ', name);
-  // console.log('폼에 정의된 필드명 : ', fieldname);
-  // console.log('사용자가 업로드한 파일 명 : ', originalname);
-  // console.log('파일의 엔코딩 타입 : ', encoding);
-  // console.log('파일의 Mime 타입 : ', mimetype);
-  // console.log('파일이 저장된 폴더 : ', destination);
-  // console.log('destinatin에 저장된 파일 명 : ', filename);
-  // console.log('업로드된 파일의 전체 경로 ', path);
-  // console.log('파일의 바이트(byte 사이즈)', size);
+  const train = spawn('python', ['train.py', '--data_path=datasets/test']);
 
-  console.log(req.files);
+  train.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
+
+  train.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  train.on('close', (code) => {
+    console.log(`child process exited with code ${code}`);
+  });
+
+  //console.log(req.files);
 
   res.redirect('/');
 
