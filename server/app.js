@@ -34,12 +34,12 @@ app.get('/', async (req, res) => {
   res.sendFile('D:\\projects\\2022-1-OSSP2-Bigpie-5\\server\\index.html');
 });
 
-app.get('/voice', async (req, res) => {
+app.post('/voice', async (req, res) => {
   let { text } = req.body;
 
   console.log(text);
 
-  text = '이것은 실화입니다.';
+  // text = '이것은 실화입니다.';
   let wavPath;
 
   const synthesize = spawn('python', [
