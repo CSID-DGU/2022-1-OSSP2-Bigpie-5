@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back">
+    android:background="@drawable/back_2">
 
     <LinearLayout
         android:id="@+id/linearlayout"
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@android:drawable/btn_star"
             android:drawablePadding="5dip"
-            android:text="녹음 리스트"
+            android:text="목록"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
@@ -25,12 +25,12 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="o/x" />
+            <Button
+                android:id="@+id/button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="o/x" />
 
             <EditText
                 android:id="@+id/editText"

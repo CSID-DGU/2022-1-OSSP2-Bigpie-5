@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back"
+    android:background="@drawable/back_1"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -79,18 +79,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="로그인" />
-
-    <TextView
-        android:id="@+id/textView03"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:fontFamily="serif-monospace"
-        android:lineSpacingExtra="8sp"
-        android:text="Big Pie"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        android:textStyle="bold" />
 
 </LinearLayout>

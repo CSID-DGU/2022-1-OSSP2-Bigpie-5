@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back"
+    android:background="@drawable/back_1"
     android:orientation="vertical">
 
     <TextView
@@ -106,17 +106,5 @@
             android:layout_height="wrap_content"
             android:text="여성" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView110"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="serif-monospace"
-        android:lineSpacingExtra="8sp"
-        android:text="Big Pie"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        android:textSize="45sp"
-        android:textStyle="bold" />
 
 </LinearLayout>
