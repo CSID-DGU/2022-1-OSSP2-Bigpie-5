@@ -5,7 +5,6 @@ import argparse
 import traceback
 import subprocess
 import numpy as np
-from zmq import device
 from jamo import h2j
 import tensorflow as tf
 from datetime import datetime
@@ -90,10 +89,18 @@ def save_and_plot_fn(args, log_dir, step, loss, prefix):
     save_audio(waveform, audio_path)
 
     info_text = 'step={:d}, loss={:.5f}'.format(step, loss)
-    plot.plot_alignment(
-            align, align_path, info=info_text,
-            text=sequence_to_text(seq,
-                    skip_eos_and_pad=True, combine_jamo=True))
+    if 'korean_cleaners' in [x.strip() for x in hparams.cleaners.split(',')]:
+        log('Training korean : Use jamo')
+        plot.plot_alignment(
+                align, align_path, info=info_text,
+                text=sequence_to_text(seq,
+                        skip_eos_and_pad=True, combine_jamo=True))
+    else:
+        log('Training non-korean : X use jamo')
+        plot.plot_alignment(
+                align, align_path, info=info_text,
+                text=sequence_to_text(seq,
+                        skip_eos_and_pad=True, combine_jamo=False)) 
 
 def save_and_plot(sequences, spectrograms,
         alignments, log_dir, step, loss, prefix):
@@ -122,7 +129,7 @@ def train(log_dir, config):
 
     log(' [*] git recv-parse HEAD:\n%s' % get_git_revision_hash())
     log('='*50)
-    log(' [*] dit diff:\n%s' % get_git_diff())
+    #log(' [*] dit diff:\n%s' % get_git_diff())
     log('='*50)
     log(' [*] Checkpoint path: %s' % checkpoint_path)
     log(' [*] Loading training data from: %s' % data_dirs)
@@ -175,18 +182,11 @@ def train(log_dir, config):
     loss_window = ValueWindow(100)
     saver = tf.train.Saver(max_to_keep=5, keep_checkpoint_every_n_hours=2)
 
-    # CPU version training
-    sess_config = tf.ConfigProto(
-            log_device_placement=False,
-            allow_soft_placement=True)
-    sess_config.gpu_options.allow_growth=True
-    
-    '''    # GPU version training
     sess_config = tf.ConfigProto(
             log_device_placement=False,
             allow_soft_placement=True,
-            device_count={'GPU':1}) #추가된 부분
-    sess_config.gpu_options.allow_growth=True  '''
+            device_count = {'GPU': 1})
+    sess_config.gpu_options.allow_growth=True
 
     # Train!
     #with tf.Session(config=sess_config) as sess:
