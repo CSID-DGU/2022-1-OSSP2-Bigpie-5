@@ -75,7 +75,7 @@ class Synthesizer(object):
             use_short_concat=False,
             manual_attention_mode=0,
             base_alignment_path=None,
-            librosa_trim=False,
+            librosa_trim=True,
             attention_trim=True):
 
         # Possible inputs:
