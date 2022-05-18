@@ -20,6 +20,7 @@ const _storage = multer.diskStorage({
     cb(null, file.originalname.slice(0, file.originalname.length - 3) + 'wav');
   },
 });
+
 const upload = multer({ storage: _storage });
 
 const app = express();
@@ -45,7 +46,7 @@ app.post('/voice', async (req, res) => {
   const synthesize = spawn('python', [
     'synthesizer.py',
     '--load_path',
-    'logs/myset_2022-04-09_14-37-43',
+    'logs/ko_single',
     '--text',
     `"${text}"`,
   ]);
