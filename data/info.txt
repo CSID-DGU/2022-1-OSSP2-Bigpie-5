@@ -1,0 +1,6 @@
+alignment.json
+1_0000 ~ 2_1000 까지 실제 음성 녹음파일
+
+[음성데이터 공유 구글 드라이브]
+ID: ossbigpie@gmail.com
+password: ***고나형에게 문의***
