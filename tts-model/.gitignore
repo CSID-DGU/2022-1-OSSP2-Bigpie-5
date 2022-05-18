@@ -1,7 +1,7 @@
 # Text
 *.png
 *.txt
-*.json
+#*.json
 *.csv
 
 # Data
