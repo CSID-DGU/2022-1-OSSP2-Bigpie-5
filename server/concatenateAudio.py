@@ -1,6 +1,6 @@
 import wave
 
-infiles = ["voices/kaggle.wav", "voices/ko.wav"]
+infiles = ["voices/1.wav", "voices/2.wav", "voices/3.wav", "voices/4.wav"]
 outfile = "voices/result.wav"
 
 data= []
