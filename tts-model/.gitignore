@@ -4,6 +4,8 @@
 #*.json
 *.csv
 
+!wav_count.txt
+
 # Data
 samples
 datasets
