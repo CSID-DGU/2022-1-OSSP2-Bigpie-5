@@ -217,9 +217,16 @@ def plot_graph_and_save_audio(args,
         time_str=None):
 
     idx, (wav, alignment, path, text, sequence) = args
+    
+    with open('wav_count.txt', 'r') as f:
+        last_line = f.readlines()[0][-1]
+    
+    with open('wav_count.txt', 'a') as f:
+        f.write(str(int(last_line) + 1))
 
     if base_path:
-        plot_path = "{}/{}.png".format(base_path, get_time())
+        plot_path = "{}/{}.png".format(base_path, last_line)
+        # plot_path = "{}/{}.png".format(base_path, get_time())
     elif path:
         plot_path = path.rsplit('.', 1)[0] + ".png"
     else:
