@@ -26,7 +26,7 @@ while first < len(text):
     if finished:
         texts.append(text[first:])
     else:
-     texts.append(text[first:last])   
+        texts.append(text[first:last])   
     
     first = last + 1      
     

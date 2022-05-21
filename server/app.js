@@ -3,7 +3,7 @@ import path from 'path';
 import multer from 'multer';
 import util from 'util';
 import child_process from 'child_process';
-import { spawn } from 'child_process';
+import { spawnSync } from 'child_process';
 import mime from 'mime';
 import fs from 'fs';
 // import spawn from 'await-spawn';
@@ -40,55 +40,149 @@ app.post('/voice', async (req, res) => {
 
   console.log(text);
 
-  // text = '이것은 실화입니다.';
-  let wavPath;
+  const texts = [];
 
-  const synthesize = spawn('python', [
-    'synthesizer.py',
-    '--load_path',
-    'logs/ko_single',
-    '--text',
-    `"${text}"`,
+  let first = 0;
+  let finished = false;
+
+  while (first < text.length) {
+    let last = first + 35;
+
+    for (let i = last; i < last + 20; i++) {
+      if (i >= text.length) {
+        finished = true;
+        break;
+      } else if (text.charAt(i) == ' ') {
+        last = i;
+        break;
+      }
+    }
+
+    if (finished) {
+      texts.push(text.substring(first));
+    } else {
+      texts.push(text.substring(first, last));
+    }
+
+    first = last + 1;
+  }
+
+  console.log(texts);
+
+  const filepaths = [];
+
+  const numFiles = texts.length;
+
+  for (const text of texts) {
+    let wavPath = '';
+
+    const synthesize = spawnSync('python', [
+      'synthesizer.py',
+      '--load_path',
+      'logs/ko_single',
+      '--text',
+      `"${text}"`,
+    ]);
+
+    // synthesize.stdout.on('data', (data) => {
+    //   console.log(`stdout: ${data}`);
+
+    //   if (data.indexOf('.wav') != -1) {
+    //     wavPath = data.toString();
+
+    //     wavPath = wavPath.slice(wavPath.indexOf('samples'));
+
+    //     console.log();
+    //     console.log('yayyyyyyyyyyyyyy');
+    //   }
+    // });
+
+    var savedOutput = synthesize.stdout;
+
+    wavPath = String(savedOutput);
+
+    console.log(wavPath);
+
+    wavPath = wavPath.slice(wavPath.indexOf('samples'));
+
+    // synthesize.stderr.on('data', (data) => {
+    //   console.error(`stderr: ${data}`);
+    // });
+
+    // synthesize.on('close', (code) => {
+    //   console.log(`synthesize exited with code ${code}`);
+    // });
+
+    // await sleep(30000);
+
+    wavPath = wavPath.substring(0, wavPath.indexOf('\r'));
+
+    const filepath = `D:/projects/2022-1-OSSP2-Bigpie-5/tts-model/${wavPath}`;
+
+    filepaths.push(filepath);
+  }
+
+  // texts.forEach(async (text) => {
+  //   // let wavPath = '';
+  //   // const synthesize = spawnSync('python', [
+  //   //   'synthesizer.py',
+  //   //   '--load_path',
+  //   //   'logs/ko_single',
+  //   //   '--text',
+  //   //   `"${text}"`,
+  //   // ]);
+  //   // // synthesize.stdout.on('data', (data) => {
+  //   // //   console.log(`stdout: ${data}`);
+  //   // //   if (data.indexOf('.wav') != -1) {
+  //   // //     wavPath = data.toString();
+  //   // //     wavPath = wavPath.slice(wavPath.indexOf('samples'));
+  //   // //     console.log();
+  //   // //     console.log('yayyyyyyyyyyyyyy');
+  //   // //   }
+  //   // // });
+  //   // var savedOutput = synthesize.stdout;
+  //   // wavPath = String(savedOutput);
+  //   // console.log(wavPath);
+  //   // wavPath = wavPath.slice(wavPath.indexOf('samples'));
+  //   // // synthesize.stderr.on('data', (data) => {
+  //   // //   console.error(`stderr: ${data}`);
+  //   // // });
+  //   // // synthesize.on('close', (code) => {
+  //   // //   console.log(`synthesize exited with code ${code}`);
+  //   // // });
+  //   // // await sleep(30000);
+  //   // wavPath = wavPath.substring(0, wavPath.indexOf('\r'));
+  //   // const filepath = `D:/projects/2022-1-OSSP2-Bigpie-5/tts-model/${wavPath}`;
+  //   // filepaths.push(filepath);
+  // });
+
+  const concatenate = spawnSync('python', [
+    '../server/concatenateAudio.py',
+    numFiles,
   ]);
 
-  synthesize.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
+  var concatenateOutput = concatenate.stdout;
 
-    if (data.indexOf('.wav') != -1) {
-      wavPath = data.toString();
+  console.log(String(concatenateOutput));
 
-      wavPath = wavPath.slice(wavPath.indexOf('samples'));
+  fs.readFile(
+    'D:/projects/2022-1-OSSP2-Bigpie-5/server/voices/result.wav',
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.end(null);
+      } else {
+        console.log(filepaths);
+        //console.log(data);
 
-      console.log();
-      console.log('yayyyyyyyyyyyyyy');
+        res.end(data);
+      }
     }
-  });
+  );
 
-  synthesize.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
+  // -------------------------------------------
 
-  synthesize.on('close', (code) => {
-    console.log(`synthesize exited with code ${code}`);
-  });
-
-  await sleep(30000);
-
-  wavPath = wavPath.substr(0, wavPath.length - 2);
-
-  const filepath = `D:/projects/2022-1-OSSP2-Bigpie-5/tts-model/${wavPath}`;
-
-  fs.readFile(filepath, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.end(null);
-    } else {
-      console.log(filepath);
-      //console.log(data);
-
-      res.end(data);
-    }
-  });
+  // -------------------------------------------
 
   // const mimetype = mime.getType(file);
 

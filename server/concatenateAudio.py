@@ -1,7 +1,29 @@
 import wave
+import sys
 
-infiles = ["voices/1.wav", "voices/2.wav", "voices/3.wav", "voices/4.wav"]
-outfile = "voices/result.wav"
+numFiles = sys.argv[1]
+
+print(numFiles)
+
+infiles = []
+
+last_line = 0
+
+with open('D:\\projects\\2022-1-OSSP2-Bigpie-5\\tts-model\\wav_count.txt', 'r') as f:
+        last_line = int(f.readlines()[-1][:-1])
+
+last_line = last_line - 10
+print(last_line)
+
+
+
+for i in range(0, int(numFiles)):
+    print(infiles);
+    
+    infiles.append("D:\\projects\\2022-1-OSSP2-Bigpie-5\\tts-model\\samples\\" + str(last_line + i) + ".manual.wav")
+    
+
+outfile = "D:\\projects\\2022-1-OSSP2-Bigpie-5\\server\\voices\\result.wav"
 
 data= []
 for infile in infiles:
