@@ -1,4 +1,4 @@
-package kr.co.bigpie.myapplication.ui.login;
+package kr.co.bigpie.myapplication.ui.ui.login;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel;
 
 import android.util.Patterns;
 
-import kr.co.bigpie.myapplication.data.LoginRepository;
-import kr.co.bigpie.myapplication.data.Result;
-import kr.co.bigpie.myapplication.data.model.LoggedInUser;
-import kr.co.bigpie.myapplication.R;
+import kr.co.bigpie.myapplication.ui.data.LoginRepository;
+import kr.co.bigpie.myapplication.ui.data.Result;
+import kr.co.bigpie.myapplication.ui.data.model.LoggedInUser;
+import kr.co.bigpie.myapplication.ui.R;
 
 public class LoginViewModel extends ViewModel {
 
