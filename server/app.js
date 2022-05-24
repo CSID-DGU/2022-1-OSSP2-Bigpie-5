@@ -84,7 +84,7 @@ app.post('/voice', async (req, res) => {
       `"${text}"`,
     ]);
 
-    var savedOutput = synthesize.stdout;
+    const savedOutput = synthesize.stdout;
 
     wavPath = String(savedOutput);
 
@@ -96,6 +96,8 @@ app.post('/voice', async (req, res) => {
 
     const filepath = `D:/projects/2022-1-OSSP2-Bigpie-5/tts-model/${wavPath}`;
 
+    console.log(filepath);
+
     filepaths.push(filepath);
   }
 
@@ -104,7 +106,7 @@ app.post('/voice', async (req, res) => {
     numFiles,
   ]);
 
-  var concatenateOutput = concatenate.stdout;
+  const concatenateOutput = concatenate.stdout;
 
   console.log(String(concatenateOutput));
 
