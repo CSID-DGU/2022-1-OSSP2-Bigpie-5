@@ -1,4 +1,4 @@
-package kr.co.bigpie.myapplication.ui.login;
+package kr.co.bigpie.myapplication.ui.ui.login;
 
 import androidx.annotation.Nullable;
 

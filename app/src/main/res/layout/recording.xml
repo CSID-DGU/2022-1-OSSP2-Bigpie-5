@@ -30,7 +30,7 @@
 
         </ImageView>
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/ImageView11"
@@ -43,7 +43,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="#000"
             android:textSize="40dp"
-            android:typeface="monospace" />
+            android:typeface="monospace"
+            android:test="editable = true"/>
     </RelativeLayout>
 
     <LinearLayout

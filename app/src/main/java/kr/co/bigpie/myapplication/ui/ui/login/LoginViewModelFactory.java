@@ -1,11 +1,11 @@
-package kr.co.bigpie.myapplication.ui.login;
+package kr.co.bigpie.myapplication.ui.ui.login;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 
-import kr.co.bigpie.myapplication.data.LoginDataSource;
-import kr.co.bigpie.myapplication.data.LoginRepository;
+import kr.co.bigpie.myapplication.ui.data.LoginDataSource;
+import kr.co.bigpie.myapplication.ui.data.LoginRepository;
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.

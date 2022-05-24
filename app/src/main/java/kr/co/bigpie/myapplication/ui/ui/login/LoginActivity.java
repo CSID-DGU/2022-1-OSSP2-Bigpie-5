@@ -1,4 +1,4 @@
-package kr.co.bigpie.myapplication.ui.login;
+package kr.co.bigpie.myapplication.ui.ui.login;
 
 import android.app.Activity;
 
@@ -22,10 +22,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import kr.co.bigpie.myapplication.R;
-import kr.co.bigpie.myapplication.ui.login.LoginViewModel;
-import kr.co.bigpie.myapplication.ui.login.LoginViewModelFactory;
-import kr.co.bigpie.myapplication.databinding.ActivityLoginBinding;
+import kr.co.bigpie.myapplication.ui.R;
+import kr.co.bigpie.myapplication.ui.ui.login.LoginViewModel;
+import kr.co.bigpie.myapplication.ui.ui.login.LoginViewModelFactory;
+import kr.co.bigpie.myapplication.ui.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package kr.co.bigpie.myapplication.ui.login;
+package kr.co.bigpie.myapplication.ui.ui.login;
 
 /**
  * Class exposing authenticated user details to the UI.
