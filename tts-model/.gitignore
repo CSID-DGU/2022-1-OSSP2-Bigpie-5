@@ -1,8 +1,10 @@
 # Text
 *.png
 *.txt
-*.json
+#*.json
 *.csv
+
+!wav_count.txt
 
 # Data
 samples
