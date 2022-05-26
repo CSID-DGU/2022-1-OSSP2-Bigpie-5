@@ -4,6 +4,7 @@ import multer from 'multer';
 import util from 'util';
 import child_process from 'child_process';
 import { spawnSync } from 'child_process';
+import { spawn } from 'child_process';
 import mime from 'mime';
 import fs from 'fs';
 // import spawn from 'await-spawn';
@@ -12,12 +13,17 @@ const exec = util.promisify(child_process.exec);
 
 const __dirname = path.resolve();
 
+let i = 1;
+
 const _storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, '../tts-model/datasets/test/audio');
   },
+
   filename: (req, file, cb) => {
-    cb(null, file.originalname.slice(0, file.originalname.length - 3) + 'wav');
+    // cb(null, file.originalname.slice(0, file.originalname.length - 3) + 'wav');
+    cb(null, i + '.wav');
+    i++;
   },
 });
 
@@ -79,7 +85,7 @@ app.post('/voice', async (req, res) => {
     const synthesize = spawnSync('python', [
       'synthesizer.py',
       '--load_path',
-      'logs/ko_single',
+      'logs/ko_single2',
       '--text',
       `"${text}"`,
     ]);
