@@ -85,7 +85,7 @@ app.post('/voice', async (req, res) => {
     const synthesize = spawnSync('python', [
       'synthesizer.py',
       '--load_path',
-      'logs/ko_single2',
+      'logs/ko_single3',
       '--text',
       `"${text}"`,
     ]);
