@@ -235,6 +235,29 @@ app.post('/signup', async (req, res) => {
   );
 });
 
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  User.findOne(
+    {
+      email,
+    },
+    async (err, user) => {
+      if (!user) {
+        res.json({ message: 'wrong email' });
+      } else {
+        const found = await bcrypt.compare(password, user.password);
+
+        if (found) {
+          res.json({ id: email.substring(0, email.indexOf('@')) });
+        } else {
+          res.json({ message: 'wrong password' });
+        }
+      }
+    }
+  );
+});
+
 app.listen(8080, () => {
   console.log('server is running on port 8080');
 });
