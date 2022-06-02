@@ -131,44 +131,57 @@ app.post('/voice', async (req, res) => {
   );
 });
 
+let cnt_file = 0;
+let N = 7;
+
 app.post('/upload', upload.any(), async (req, res) => {
-  await sleep(5000);
+  cnt_file++;
 
-  const generateData = spawn('python', [
-    '-m',
-    'datasets.generate_data',
-    './datasets/test/alignment.json',
-  ]);
+  if (cnt_file == N) {
+    await sleep(5000);
 
-  generateData.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
-  });
+    const generateData = spawn('python', [
+      '-m',
+      'datasets.generate_data',
+      './datasets/test/alignment.json',
+    ]);
 
-  generateData.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
+    generateData.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
 
-  generateData.on('close', (code) => {
-    console.log(`generateData exited with code ${code}`);
-  });
+    generateData.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
 
-  await sleep(10000);
+    generateData.on('close', (code) => {
+      console.log(`generateData exited with code ${code}`);
+    });
 
-  const train = spawn('python', ['train.py', '--data_path=datasets/test']);
+    await sleep(10000);
 
-  train.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
-  });
+    const train = spawn('python', ['train.py', '--data_path=datasets/test']);
 
-  train.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
+    train.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
 
-  train.on('close', (code) => {
-    console.log(`train exited with code ${code}`);
-  });
+    train.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
 
-  res.redirect('/');
+    train.on('close', (code) => {
+      console.log(`train exited with code ${code}`);
+    });
+
+    res.json({
+      message: 'TTS model has started training',
+    });
+  } else {
+    res.json({
+      message: '.wav file successfully uploaded',
+    });
+  }
 });
 
 app.listen(8080, () => {
