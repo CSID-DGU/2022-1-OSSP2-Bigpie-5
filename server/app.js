@@ -1,19 +1,43 @@
 import express from 'express';
-import path from 'path';
-import multer from 'multer';
-import util from 'util';
-import child_process from 'child_process';
-import { spawnSync } from 'child_process';
-import { spawn } from 'child_process';
-import mime from 'mime';
 import fs from 'fs';
-// import spawn from 'await-spawn';
+import multer from 'multer';
+import { spawn } from 'child_process';
+import { spawnSync } from 'child_process';
+import { ServerApiVersion } from 'mongodb';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import helmet from 'helmet';
+import bcrypt from 'bcrypt';
+import cors from 'cors';
+import morgan from 'morgan';
 
-const exec = util.promisify(child_process.exec);
+const corsOptions = {
+  origin: '*',
+  credentials: true,
+  optionSuccessStatus: 200,
+};
 
-const __dirname = path.resolve();
+dotenv.config({ path: 'D:/projects/2022-1-OSSP2-Bigpie-5/server/.env' });
 
-let i = 1;
+const SECRET_KEY = process.env.SECRET_KEY;
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.qq1ux.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
+  dbName: 'OSSP',
+});
+
+const UserSchema = mongoose.Schema({
+  email: String,
+  password: String,
+});
+
+const User = mongoose.model('users', UserSchema);
+
+let fileIndex = 1;
 
 const _storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -22,15 +46,19 @@ const _storage = multer.diskStorage({
 
   filename: (req, file, cb) => {
     // cb(null, file.originalname.slice(0, file.originalname.length - 3) + 'wav');
-    cb(null, i + '.wav');
-    i++;
+    cb(null, fileIndex + '.wav');
+    fileIndex++;
   },
 });
 
 const upload = multer({ storage: _storage });
 
 const app = express();
+
+app.use(cors(corsOptions));
+app.use(helmet());
 app.use(express.json());
+app.use(morgan('tiny'));
 app.use(express.urlencoded({ extended: false }));
 
 const sleep = (ms) => {
@@ -182,6 +210,29 @@ app.post('/upload', upload.any(), async (req, res) => {
       message: '.wav file successfully uploaded',
     });
   }
+});
+
+app.post('/signup', async (req, res) => {
+  const { email, password } = req.body;
+
+  const saltRounds = 10;
+  const encrypted = await bcrypt.hash(password, saltRounds);
+
+  User.findOne(
+    {
+      email,
+    },
+    (err, user) => {
+      if (user) {
+        res.json({ message: 'existing email' });
+      } else {
+        const newUser = new User({ email, password: encrypted });
+        newUser.save().then(() => {
+          res.json({ message: 'success' });
+        });
+      }
+    }
+  );
 });
 
 app.listen(8080, () => {

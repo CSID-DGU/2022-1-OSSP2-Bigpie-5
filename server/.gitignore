@@ -1,5 +1,5 @@
-package.json
 node_modules/
 uploads/
 index.html
 voices/
+.env
