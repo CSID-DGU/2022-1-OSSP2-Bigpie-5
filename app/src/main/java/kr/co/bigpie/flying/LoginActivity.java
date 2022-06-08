@@ -26,7 +26,8 @@ import java.util.HashMap;
 public class LoginActivity extends AppCompatActivity {
     private EditText etemail, etpassword;
     private Button login_button, go_register_button, go_skip_button;
-    final static private String URL = "http://172.30.1.37:8080/login";
+    final static private String URL = "http://localhost:8080/login";
+    //localhost 자리에 ip주소
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

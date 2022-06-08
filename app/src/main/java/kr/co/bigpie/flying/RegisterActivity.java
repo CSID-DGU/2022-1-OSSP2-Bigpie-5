@@ -29,7 +29,8 @@ import java.util.HashMap;
 public class RegisterActivity extends AppCompatActivity{
     private EditText et_email, et_password;
     private Button go_login_button, registerButton;
-    final static private String URL = "http://172.30.1.37:8080/signup";
+    final static private String URL = "http://localhost:8080/signup";
+    //localhost 자리에 ip 주소
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //액티비티 시작시 처음으로 실행
