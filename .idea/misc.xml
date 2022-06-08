@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/backward_32px.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/buttonshape.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/edit_text_round.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/forward_32px.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/ic_audio_pause.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/ic_audio_play.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/ic_gradient_bg.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/ic_launcher_background_black.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/ic_letter.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/ic_next.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/ic_o.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/ic_record.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/ic_recording_red.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/ic_x.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/rectangular.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/repeat_32px.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/repeat_one_32px.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/drawable/round_btn.xml" value="0.1" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/layout/activity_cancel_popup.xml" value="0.17401215805471124" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/layout/activity_list.xml" value="0.17401215805471124" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/layout/activity_main.xml" value="0.19519927536231885" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/layout/activity_record.xml" value="0.17401215805471124" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/layout/activity_register.xml" value="0.25" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/layout/activity_view.xml" value="0.17401215805471124" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/layout/activity_write.xml" value="0.17401215805471124" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/layout/item_audio.xml" value="0.17401215805471124" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/layout/item_rv_memo.xml" value="0.17401215805471124" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/layout/reservation.xml" value="0.17401215805471124" />
+        <entry key="..\:/bigpie_layout/Flying/app/src/main/res/layout/temp.xml" value="0.1757852077001013" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
