@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_2"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <TextView
+        android:id="@+id/textView_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="5dip"
+        android:text="진행 상황"
+        android:textAlignment="center"
+        android:textColor="#000"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <RelativeLayout
+        android:id="@+id/relativelayout00"
+        android:layout_width="fill_parent"
+        android:layout_height="462dp">
+
+        <ImageView
+            android:id="@+id/ImageView11"
+            android:layout_width="match_parent"
+            android:layout_height="456dp"
+            android:src="@drawable/rectangular">
+
+        </ImageView>
+
+        <TextView
+            android:id="@+id/textView_record"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/ImageView11"
+            android:layout_alignTop="@id/ImageView11"
+            android:layout_alignRight="@id/ImageView11"
+            android:layout_alignBottom="@+id/ImageView11"
+            android:fontFamily="serif-monospace"
+            android:gravity="center"
+            android:text="제시문"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#000"
+            android:textSize="40dp"
+            android:typeface="monospace" />
+    </RelativeLayout>
+    <!--녹음내역들이 담길 리사이클러뷰-->
+
+    <!--녹음 제어 레이아웃웃-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="409dp"
+        android:layout_height="87dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="visible"
+            app:srcCompat="@android:drawable/ic_media_rew" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            app:srcCompat="@android:drawable/presence_audio_busy" />
+
+        <ImageButton
+            android:id="@+id/imageButton6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@android:drawable/ic_media_ff" />
+    </LinearLayout>
+
+</LinearLayout>
