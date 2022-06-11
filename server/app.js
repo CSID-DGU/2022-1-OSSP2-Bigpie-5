@@ -83,25 +83,98 @@ app.post('/voice', async (req, res) => {
   const texts = [];
 
   let first = 0;
+  let last = 0;
   let finished = false;
 
-  while (first < text.length) {
-    let last = first + 35;
+  while (first < text.length && last < text.length) {
+    last = first + 1;
+    let found = false;
 
-    for (let i = last; i < last + 20; i++) {
-      if (i >= text.length) {
-        finished = true;
-        break;
-      } else if (text.charAt(i) == ' ') {
-        last = i;
-        break;
+    let cnt = 0;
+
+    for (let i = last; i < last + 30; i++) {
+      cnt++;
+
+      if (cnt >= 5) {
+        if (i >= text.length) {
+          finished = true;
+          found = true;
+          break;
+        } else if (text.charAt(i) == '.') {
+          last = i;
+          found = true;
+          break;
+        } else if (text.charAt(i) == ',') {
+          last = i;
+          found = true;
+          break;
+        } else if (
+          i + 1 < text.length &&
+          text.charAt(i) == '서' &&
+          text.charAt(i + 1) == ' '
+        ) {
+          last = i + 1;
+          found = true;
+          break;
+        } else if (
+          i + 1 < text.length &&
+          text.charAt(i) == '고' &&
+          text.charAt(i + 1) == ' '
+        ) {
+          last = i + 1;
+          found = true;
+          break;
+        } else if (
+          i + 2 < text.length &&
+          text.charAt(i) == '하' &&
+          text.charAt(i + 1) == '고' &&
+          text.charAt(i + 2) == ' '
+        ) {
+          last = i + 2;
+          found = true;
+          break;
+        }
       }
     }
 
+    if (!found) {
+      last = first + 30;
+
+      for (let i = last; i < last + 30; i++) {
+        if (i >= text.length) {
+          finished = true;
+          break;
+        } else if (text.charAt(i) == ' ') {
+          last = i;
+          break;
+        }
+      }
+    }
+
+    console.log(first, last, text[first], text[last]);
+
     if (finished) {
-      texts.push(text.substring(first));
+      const result = text.substring(first);
+      texts.push(result);
+
+      if (
+        result[result.length] == text[text.length] &&
+        result[result.length - 1] == text[text.length - 1] &&
+        result[result.length - 2] == text[text.length - 2]
+      ) {
+        break;
+      }
     } else {
+      const result = text.substring(first);
       texts.push(text.substring(first, last));
+
+      // if (
+      //   result[result.length] == text[text.length] &&
+      //   result[result.length - 1] == text[text.length - 1] &&
+      //   result[result.length - 2] == text[text.length - 2]
+      // ) {
+      //   break;
+      // }
     }
 
     first = last + 1;
@@ -115,6 +188,8 @@ app.post('/voice', async (req, res) => {
 
   for (const text of texts) {
     let wavPath = '';
+
+    console.log('여기');
 
     const synthesize = spawnSync('python', [
       'synthesizer.py',
