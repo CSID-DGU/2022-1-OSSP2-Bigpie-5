@@ -62,6 +62,14 @@ public class RegisterActivity extends AppCompatActivity{
                             public void onResponse(JSONObject response) {
                                 try {
                                     Log.v("Response:%n %s", response.toString(4));
+                                    if(response.toString().equals("existing email")){
+                                        Toast.makeText(getApplicationContext(),"이미 존재하는 회원정보입니다.",Toast.LENGTH_SHORT).show();
+                                    }
+                                    else{
+                                        Toast.makeText(getApplicationContext(), "회원가입에 성공하였습니다.",Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                        startActivity(intent);
+                                    }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

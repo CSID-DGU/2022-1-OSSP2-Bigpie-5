@@ -7,11 +7,13 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -26,6 +28,17 @@ import java.util.Date;
 
 import kr.co.bigpie.flying.MainActivity;
 import kr.co.bigpie.flying.R;
+import kr.co.bigpie.flying.RetrofitInterface;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+//import kr.co.bigpie.flying.RetrofitTest;
 
 public class VoiceRecord extends AppCompatActivity {
 
@@ -62,6 +75,11 @@ public class VoiceRecord extends AppCompatActivity {
 
     // 오디오 레코드 인덱스
     private int index = 0;
+
+    //서버통신
+    RetrofitInterface apiService;
+    //URL주소
+    private static final String URL_UPLOAD = "http://192.168.219.100:8080";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +146,8 @@ public class VoiceRecord extends AppCompatActivity {
                     textView_progress.setText((index+1)+"//"+record_text.length);
                 }
                 audioNextBtn.setEnabled(true);
+                initRetrofitClient();
+                upload();
             }
         });
 
@@ -196,6 +216,40 @@ public class VoiceRecord extends AppCompatActivity {
             }
         });
     }
+
+    private void initRetrofitClient() {
+        OkHttpClient client = new OkHttpClient.Builder().build();
+        apiService = new Retrofit.Builder().baseUrl(URL_UPLOAD).client(client).build().create(RetrofitInterface.class);
+    }
+
+    private void upload(){
+        File audiofile = new File(audioFileName);
+        RequestBody reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), audiofile);
+        //key
+        MultipartBody.Part body = MultipartBody.Part.createFormData("uploadFile", audioFileName, reqFile);
+        //RequestBody name = RequestBody.create(MediaType.parse("multipart/form-data"), "upload");
+        Call<ResponseBody> req = apiService.wavUpload(body);
+
+        req.enqueue(new Callback<ResponseBody>() {
+
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.e("upload()", "성공 : ");
+                Toast.makeText(getApplicationContext(), response.code() + "", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("upload()", "에러 : " + t.getMessage());
+                Toast.makeText(getApplicationContext(), "req fail", Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
+            }
+        });
+    }
+
+
+
+
 
     // 오디오 파일 권한 체크
     private boolean checkAudioPermission() {

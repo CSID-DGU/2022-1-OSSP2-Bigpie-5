@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -25,15 +23,15 @@ public class ListActivity extends AppCompatActivity {
     private int REQUEST_TEST = 200;
 
     //Button write_btn;
-    kr.co.bigpie.flying.Letter.PreferenceManager pref;
+    PreferenceManager pref;
     RecyclerView recyclerView;
-    kr.co.bigpie.flying.Letter.MemoAdapter memoAdapter;
+    MemoAdapter memoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        pref = new kr.co.bigpie.flying.Letter.PreferenceManager();
+        pref = new PreferenceManager();
 
         //write_btn = findViewById(R.id.write_btn);
         //write_btn.setOnClickListener(new View.OnClickListener() {
@@ -49,7 +47,7 @@ public class ListActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.memo_rv);//리사이클러뷰 findView
         linearLayoutManager = new LinearLayoutManager(ListActivity.this, LinearLayoutManager.VERTICAL, false);
 
-        memoAdapter = new kr.co.bigpie.flying.Letter.MemoAdapter(ListActivity.this);
+        memoAdapter = new MemoAdapter(ListActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);//linearlayout 세팅
         recyclerView.setAdapter(memoAdapter);//adapter 세팅
 
@@ -68,7 +66,7 @@ public class ListActivity extends AppCompatActivity {
                 String title = (String) jsonObject.getString("title");
                 String content = (String) jsonObject.getString("content");
                 String reserve = (String) jsonObject.getString("selectedDate");
-                memoAdapter.addItem(new kr.co.bigpie.flying.Letter.MemoItem(key, title, content, reserve));
+                memoAdapter.addItem(new MemoItem(key, title, content, reserve));
             } catch (JSONException e) {
                 Log.d("MainActivity","JSONObject : "+e);
             }
@@ -93,7 +91,7 @@ public class ListActivity extends AppCompatActivity {
                 String get_content = data.getStringExtra("content");
                 String get_reserve = data.getStringExtra("selectedDate");
 
-                memoAdapter.addItem(new kr.co.bigpie.flying.Letter.MemoItem(get_date,get_title,get_content, get_reserve));
+                memoAdapter.addItem(new MemoItem(get_date,get_title,get_content, get_reserve));
 
                 memoAdapter.notifyDataSetChanged();
                 Toast.makeText(ListActivity.this, "작성 되었습니다", Toast.LENGTH_SHORT).show();
@@ -123,7 +121,7 @@ public class ListActivity extends AppCompatActivity {
                 String title = (String) jsonObject.getString("title");
                 String content = (String) jsonObject.getString("content");
                 String reserve = (String) jsonObject.getString("selectedDate");
-                memoAdapter.addItem(new kr.co.bigpie.flying.Letter.MemoItem(key,title,content, reserve));
+                memoAdapter.addItem(new MemoItem(key,title,content, reserve));
             } catch (JSONException e){
 
             }

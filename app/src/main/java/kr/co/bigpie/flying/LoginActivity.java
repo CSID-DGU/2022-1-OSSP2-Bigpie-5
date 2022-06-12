@@ -67,7 +67,12 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             Log.v("Response:%n %s", response.toString(4));
-                            if(!response.toString().equals("wrong password") && !response.toString().equals("wrong email")){
+                            if(response.toString().equals("wrong password")){
+                                Toast.makeText(getApplicationContext(), "비밀번호가 틀렸습니다.",Toast.LENGTH_SHORT).show();
+                            }else if(response.toString().equals("wrong email")){
+                                Toast.makeText(getApplicationContext(),"아이디가 틀렸습니다.", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(getApplicationContext(),"로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                             }

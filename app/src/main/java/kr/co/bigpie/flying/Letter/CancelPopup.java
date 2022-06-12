@@ -18,7 +18,7 @@ public class CancelPopup extends Activity {
     TextView txtText;
     Button confirm_btn;
     Button cancel_btn;
-    kr.co.bigpie.flying.Letter.PreferenceManager pref;
+    PreferenceManager pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class CancelPopup extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_cancel_popup);
 
-        pref = new kr.co.bigpie.flying.Letter.PreferenceManager();
+        pref = new PreferenceManager();
 
         // UI 객체 생성
         txtText = (TextView)findViewById(R.id.txtText);

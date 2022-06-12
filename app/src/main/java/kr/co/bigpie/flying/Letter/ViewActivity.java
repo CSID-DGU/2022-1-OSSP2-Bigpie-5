@@ -22,7 +22,7 @@ import kr.co.bigpie.flying.R;
 public class ViewActivity extends AppCompatActivity {
     private int REQUEST_RE = 202;
 
-    kr.co.bigpie.flying.Letter.PreferenceManager pref;
+    PreferenceManager pref;
     TextView view_title;
     TextView view_content;
 
@@ -45,7 +45,7 @@ public class ViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
 
-        pref = new kr.co.bigpie.flying.Letter.PreferenceManager();
+        pref = new PreferenceManager();
         view_title = findViewById(R.id.view_title);
         view_content = findViewById(R.id.view_content);
 

@@ -1,6 +1,5 @@
 package kr.co.bigpie.flying.Letter;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,37 +10,52 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
-import java.util.Calendar;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-
-import java.text.ParseException;
-
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 import kr.co.bigpie.flying.AlarmRecevier;
 import kr.co.bigpie.flying.R;
+import kr.co.bigpie.flying.RetrofitInterface;
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class WriteActivity extends AppCompatActivity {
 
-    kr.co.bigpie.flying.Letter.PreferenceManager pref;
+    PreferenceManager pref;
     Button save_btn;
     CheckBox checkBox;
     EditText title;
     EditText content;
     LinearLayout reserve;
-
     CalendarView calendarView;
+
+    //서버통신
+    RetrofitInterface apiService;
+    String ToSynthesizer;
+    String titleValue;
+    //서버 URL주소
+    private static final String URL_UPLOAD = "http://192.168.219.100:8080";
 
     // 알람
     private AlarmManager alarmManager;
@@ -60,7 +74,7 @@ public class WriteActivity extends AppCompatActivity {
         mCalender = new GregorianCalendar();
         Log.v("HelloAlarmActivity", mCalender.getTime().toString());
 
-        pref = new kr.co.bigpie.flying.Letter.PreferenceManager();
+        pref = new PreferenceManager();
 
         save_btn = findViewById(R.id.save_btn);
         // editText 할당
@@ -110,6 +124,12 @@ public class WriteActivity extends AppCompatActivity {
                 //PreferenceManager 클래스에서 저장에 관한 메소드를 관리
                 pref.setString(getApplication(), getTime, save_form);
 
+                //서버에 Synthesizer 결과요청
+                titleValue = edit_title;
+                ToSynthesizer = edit_content;
+                initRetrofitClient();
+                getSynthesizedResult();
+
                 // Intent로 값을 MainActivity에 전달
                 Intent intent = new Intent();
                 intent.putExtra("date", getTime);
@@ -145,6 +165,99 @@ public class WriteActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    //서버로 보내기 전 initialization
+    private void initRetrofitClient() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(600, TimeUnit.SECONDS)
+                .build();
+        apiService = new Retrofit.Builder().baseUrl(URL_UPLOAD).client(client).build().create(RetrofitInterface.class);
+    }
+
+    //서버로 보내기 및 받기
+    private void getSynthesizedResult(){
+        Call<ResponseBody> req = apiService.synthesizedResult(ToSynthesizer);
+
+        req.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    Log.d("knh", "server contacted and has file");
+                    Log.d("knh", "Respone.body()" + response.body());
+                    boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+                    Log.d("knh", "file download was a success? " + writtenToDisk);
+                } else {
+                    Log.d("knh", "server contact failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("knh", "error");
+                Log.e("getSynthesizedResult()", "에러 : " + t.getMessage());
+                Toast.makeText(getApplicationContext(), "req fail", Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
+            }
+        });
+    }
+
+    // 서버에서 받아서 기기에 저장
+    private boolean writeResponseBodyToDisk(ResponseBody body) {
+        try {
+            // 파일명이 제목.wav가 되도록 함
+            File resultWavFile = new File("/sdcard/Download",titleValue + ".wav");
+            Log.d("knh", "Save in Disk ");
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+
+            try {
+                Log.d("knh", "Start File Reader");
+                byte[] fileReader = new byte[4096];
+                Log.d("knh", "check File Reader");
+                long fileSize = body.contentLength();
+                Log.d("knh", "check File Size");
+                long fileSizeDownloaded = 0;
+                Log.d("knh", "check File Size Downloaded");
+
+                inputStream = body.byteStream();
+                Log.d("knh", "check inputStream");
+                outputStream = new FileOutputStream(resultWavFile);
+                Log.d("knh", "check outputStream");
+
+                while (true) {
+                    int read = inputStream.read(fileReader);
+
+                    if (read == -1) {
+                        break;
+                    }
+
+                    outputStream.write(fileReader, 0, read);
+
+                    fileSizeDownloaded += read;
+
+                    Log.d("knh", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+
+                outputStream.flush();
+                Log.d("knh", "Save Success");
+                return true;
+            } catch (IOException e) {
+                Log.d("knh", "Error!!!!!");
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            Log.d("knh", "Error@@@@@@");
+            return false;
+        }
     }
 
     private void setAlarm(String reserve_txt) {
