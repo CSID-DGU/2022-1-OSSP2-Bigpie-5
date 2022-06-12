@@ -26,7 +26,7 @@ import java.util.HashMap;
 public class LoginActivity extends AppCompatActivity {
     private EditText etemail, etpassword;
     private Button login_button, go_register_button, go_skip_button;
-    final static private String URL = "http://localhost:8080/login";
+    final static private String URL = "http://172.30.1.11:8080/login";
     //localhost 자리에 ip주소
 
     @Override
@@ -55,11 +55,11 @@ public class LoginActivity extends AppCompatActivity {
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String id = etemail.getText().toString();
+                String email = etemail.getText().toString();
                 String password = etpassword.getText().toString();
 
                 HashMap<String, String> params = new HashMap<>();
-                params.put("id", id);
+                params.put("email", email);
                 params.put("password", password);
 
                 JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params), new Response.Listener<JSONObject>() {
@@ -67,6 +67,10 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             Log.v("Response:%n %s", response.toString(4));
+                            if(!response.toString().equals("wrong password") && !response.toString().equals("wrong email")){
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -78,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
                 //커스텀 정책을 생성하여 지정한다.
-                req.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                req.setRetryPolicy(new DefaultRetryPolicy(200 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 queue.add(req);
         }
     });
