@@ -92,7 +92,7 @@ app.post('/voice', async (req, res) => {
 
     let cnt = 0;
 
-    for (let i = last; i < last + 30 && i < text.length; i++) {
+    for (let i = last; i < last + 30; i++) {
       cnt++;
 
       if (cnt >= 5) {
@@ -140,7 +140,7 @@ app.post('/voice', async (req, res) => {
     if (!found) {
       last = first + 30;
 
-      for (let i = last; i < last + 30 && i < text.length; i++) {
+      for (let i = last; i < last + 30; i++) {
         if (i >= text.length) {
           finished = true;
           break;
@@ -158,7 +158,7 @@ app.post('/voice', async (req, res) => {
       texts.push(result);
 
       if (
-        result.length >= 3 &&
+        result.length >= 2 &&
         result[result.length] == text[text.length] &&
         result[result.length - 1] == text[text.length - 1] &&
         result[result.length - 2] == text[text.length - 2]
