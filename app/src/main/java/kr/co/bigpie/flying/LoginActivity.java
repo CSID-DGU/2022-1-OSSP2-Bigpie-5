@@ -22,11 +22,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText etemail, etpassword;
     private Button login_button, go_register_button, go_skip_button;
-    final static private String URL = "http://172.30.1.11:8080/login";
+    final static private String URL = "http://172.30.1.14:8080/login";
     //localhost 자리에 ip주소
 
     @Override
@@ -38,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
         etpassword = findViewById(R.id.etpassword);
         login_button = findViewById(R.id.login_button);
         go_register_button = findViewById(R.id.go_register_button);
-        go_skip_button = findViewById(R.id.go_skip_button);
 
         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
 
@@ -67,16 +67,17 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             Log.v("Response:%n %s", response.toString(4));
-                            if(response.toString().equals("wrong password")){
-                                Toast.makeText(getApplicationContext(), "비밀번호가 틀렸습니다.",Toast.LENGTH_SHORT).show();
-                            }else if(response.toString().equals("wrong email")){
-                                Toast.makeText(getApplicationContext(),"아이디가 틀렸습니다.", Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(getApplicationContext(),"로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
+                            String message = response.getString("message");
+
+                            if (message.equals("wrong password")) {
+                                Toast.makeText(getApplicationContext(), "비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
+                            } else if (message.equals("wrong email")) {
+                                Toast.makeText(getApplicationContext(), "아이디가 틀렸습니다.", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
+                            Toast.makeText(getApplicationContext(),"로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
                             e.printStackTrace();
                         }
                     }
@@ -93,13 +94,13 @@ public class LoginActivity extends AppCompatActivity {
     });
 
         //스킵 버튼 클릭시 메인 페이지로 넘어감
-        go_skip_button.setOnClickListener(new View.OnClickListener(){
+        /*go_skip_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
 }

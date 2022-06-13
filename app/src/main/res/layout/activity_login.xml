@@ -61,12 +61,6 @@
         android:textSize="20sp"
         android:typeface="monospace" />
 
-    <Button
-        android:id="@+id/go_skip_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="skip" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="238dp"

@@ -29,7 +29,7 @@ import java.util.HashMap;
 public class RegisterActivity extends AppCompatActivity{
     private EditText et_email, et_password;
     private Button go_login_button, registerButton;
-    final static private String URL = "http://172.30.1.11:8080/signup";
+    final static private String URL = "http://172.30.1.14:8080/signup";
     //localhost 자리에 ip 주소
 
     @Override
@@ -62,7 +62,8 @@ public class RegisterActivity extends AppCompatActivity{
                             public void onResponse(JSONObject response) {
                                 try {
                                     Log.v("Response:%n %s", response.toString(4));
-                                    if(response.toString().equals("existing email")){
+                                    String message = response.getString("message");
+                                    if(message.equals("existing email")){
                                         Toast.makeText(getApplicationContext(),"이미 존재하는 회원정보입니다.",Toast.LENGTH_SHORT).show();
                                     }
                                     else{
