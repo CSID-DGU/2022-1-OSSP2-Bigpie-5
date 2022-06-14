@@ -1,7 +1,9 @@
 package kr.co.bigpie.flying.Recorder;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -13,7 +15,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,7 +34,6 @@ import kr.co.bigpie.flying.R;
 
 //import kr.co.bigpie.flying.ApiClient;
 //import kr.co.bigpie.flying.ApiService;
-import kr.co.bigpie.flying.LoginActivity;
 
 //서버 구현 중 추가
 import okhttp3.MediaType;
@@ -44,11 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import okhttp3.MultipartBody;
-import retrofit2.http.POST;
-import retrofit2.http.Multipart;
-import retrofit2.http.Part;
 
 import kr.co.bigpie.flying.RetrofitInterface;
 //import kr.co.bigpie.flying.RetrofitTest;
@@ -59,6 +55,9 @@ public class VoiceRecord extends AppCompatActivity {
     ImageButton audioRecordImageBtn;
     ImageButton audioNextBtn;
     ImageButton audioBackBtn;
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+    int myInt;
 
     TextView textView_record;
     TextView textView_progress;
@@ -92,12 +91,20 @@ public class VoiceRecord extends AppCompatActivity {
     //서버통신
     RetrofitInterface apiService;
     //URL주소
-    private static final String URL_UPLOAD = "http://192.168.0.13:8080";
+    private static final String URL_UPLOAD = "http://192.168.219.100:8080";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
+
+        // 1. Shared Preference 초기화
+        pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        editor = pref.edit();
+        // 2. 저장해둔 값 불러오기 ("식별값", 초기값) -> 식별값과 초기값은 직접 원하는 이름과 값으로 작성.
+        myInt = pref.getInt("MyInt", 0);        // int 불러오기 (저장해둔 값 없으면 초기값인 0으로 불러옴)
+
+        index = myInt;
 
         textView_record=findViewById(R.id.textView_record);
         textView_record.setText(record_text[index]);
@@ -113,6 +120,7 @@ public class VoiceRecord extends AppCompatActivity {
     private void init() {
         audioRecordImageBtn = findViewById(R.id.imageButton2);
         audioNextBtn = findViewById(R.id.imageButton6);
+        audioNextBtn.setEnabled(false);
         audioBackBtn = findViewById(R.id.imageButton);
 
         audioRecordImageBtn.setOnClickListener(new Button.OnClickListener() {
@@ -124,6 +132,7 @@ public class VoiceRecord extends AppCompatActivity {
                     isRecording = false; // 녹음 상태 값
                     audioRecordImageBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_record, null)); // 녹음 상태 아이콘 변경
                     stopRecording();
+                    audioNextBtn.setEnabled(true);
                     // 녹화 이미지 버튼 변경 및 리코딩 상태 변수값 변경
                 } else {
                     // 현재 녹음 중 X
@@ -144,7 +153,7 @@ public class VoiceRecord extends AppCompatActivity {
 
         audioNextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view){
                 if(index == record_text.length-1) {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
@@ -153,8 +162,12 @@ public class VoiceRecord extends AppCompatActivity {
                 if(isRecording) {
                     audioNextBtn.setEnabled(false);
                 } else {
+
                     audioNextBtn.setEnabled(true);
                     index++;
+                    myInt = index;
+                    editor.putInt("MyInt", myInt);
+                    editor.apply(); // 저장
                     textView_record.setText(record_text[index]);
                     textView_progress.setText((index+1)+"//"+record_text.length);
                 }
@@ -163,6 +176,7 @@ public class VoiceRecord extends AppCompatActivity {
                 upload();
             }
         });
+
 
         audioBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,6 +191,9 @@ public class VoiceRecord extends AppCompatActivity {
                 } else {
                     audioBackBtn.setEnabled(true);
                     index--;
+                    myInt = index;
+                    editor.putInt("MyInt", myInt);
+                    editor.apply(); // 저장
                     textView_record.setText(record_text[index]);
                     textView_progress.setText((index+1)+"//"+record_text.length);
                 }
@@ -248,7 +265,7 @@ public class VoiceRecord extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.e("upload()", "성공 : ");
-                Toast.makeText(getApplicationContext(), response.code() + "", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), response.code() + "", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -259,10 +276,6 @@ public class VoiceRecord extends AppCompatActivity {
             }
         });
     }
-
-
-
-
 
     // 오디오 파일 권한 체크
     private boolean checkAudioPermission() {
@@ -276,6 +289,7 @@ public class VoiceRecord extends AppCompatActivity {
 
     // 녹음 시작
     private void startRecording() {
+        //초기화
         audioList.clear();
 
         //파일의 외부 경로 확인
@@ -312,10 +326,8 @@ public class VoiceRecord extends AppCompatActivity {
         //      - File Path를 알면 File을  인스턴스를 만들어 사용할 수 있기 때문
         audioUri = Uri.parse(audioFileName);
 
-
         // 데이터 ArrayList에 담기
         audioList.add(audioUri);
-
 
         // 데이터 갱신
         audioAdapter.notifyDataSetChanged();
@@ -354,8 +366,8 @@ public class VoiceRecord extends AppCompatActivity {
 
     // 다음 버튼 누르면 파일 전송 및 다음 텍스트 제공 및 리사이클 뷰 초기화
     private void nextButton() {
+        //audioUri.
         audioList.clear(); // 리사이클 뷰 초기화
-
         index++;    // 다음 텍스트 제공
 
     }

@@ -6,20 +6,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.android.volley.DefaultRetryPolicy;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +26,8 @@ import java.util.HashMap;
 public class RegisterActivity extends AppCompatActivity{
     private EditText et_email, et_password;
     private Button go_login_button, registerButton;
-    final static private String URL = "http://172.30.1.37:8080/signup";
+    final static private String URL = "http://172.30.1.22:8080/signup";
+    //localhost 자리에 ip 주소
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //액티비티 시작시 처음으로 실행
@@ -61,6 +59,15 @@ public class RegisterActivity extends AppCompatActivity{
                             public void onResponse(JSONObject response) {
                                 try {
                                     Log.v("Response:%n %s", response.toString(4));
+                                    String message = response.getString("message");
+                                    if(message.equals("existing email")){
+                                        Toast.makeText(getApplicationContext(),"이미 존재하는 회원정보입니다.",Toast.LENGTH_SHORT).show();
+                                    }
+                                    else{
+                                        Toast.makeText(getApplicationContext(), "회원가입에 성공하였습니다.",Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                        startActivity(intent);
+                                    }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

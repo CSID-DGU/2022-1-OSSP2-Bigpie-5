@@ -1,6 +1,5 @@
 package kr.co.bigpie.flying.Letter;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,49 +10,30 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
-import java.util.Calendar;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
-
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import java.text.ParseException;
-
-import java.util.GregorianCalendar;
-
-import kr.co.bigpie.flying.AlarmRecevier;
-import kr.co.bigpie.flying.R;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
-import kr.co.bigpie.flying.RetrofitInterface;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
+import kr.co.bigpie.flying.AlarmRecevier;
+import kr.co.bigpie.flying.R;
+import kr.co.bigpie.flying.RetrofitInterface;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,7 +42,7 @@ import retrofit2.Retrofit;
 
 public class WriteActivity extends AppCompatActivity {
 
-    kr.co.bigpie.flying.Letter.PreferenceManager pref;
+    PreferenceManager pref;
     Button save_btn;
     CheckBox checkBox;
     EditText title;
@@ -75,7 +55,7 @@ public class WriteActivity extends AppCompatActivity {
     String ToSynthesizer;
     String titleValue;
     //서버 URL주소
-    private static final String URL_UPLOAD = "http://192.168.0.13:8080";
+    private static final String URL_UPLOAD = "http://192.168.219.100:8080";
 
     // 알람
     private AlarmManager alarmManager;
@@ -94,7 +74,7 @@ public class WriteActivity extends AppCompatActivity {
         mCalender = new GregorianCalendar();
         Log.v("HelloAlarmActivity", mCalender.getTime().toString());
 
-        pref = new kr.co.bigpie.flying.Letter.PreferenceManager();
+        pref = new PreferenceManager();
 
         save_btn = findViewById(R.id.save_btn);
         // editText 할당
@@ -126,7 +106,6 @@ public class WriteActivity extends AppCompatActivity {
 
                 // String 값을 JSONObject로 변환하여 사용할 수 있도록 메모의 제목과 타이틀을 JSON 형식로 저장
                 // String save_form = "{\"title\":\"" + edit_title + "\",\"content\":\"" + edit_content + "\"}";
-
                 // key값이 겹치지 않도록 현재 시간으로 부여
                 long now = System.currentTimeMillis();
                 Date mDate = new Date(now);
@@ -182,8 +161,13 @@ public class WriteActivity extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 reserve_date[0] = year + "/" + (month + 1) + "/" + dayOfMonth;
+                if (checkBox.isChecked()) {
+                    // TODO : CheckBox is checked.
+                    checkBox.setChecked(false);
+                    content.setVisibility(View.VISIBLE);
+                    reserve.setVisibility(View.GONE);
+                }
             }
-
         });
     }
 
@@ -226,7 +210,7 @@ public class WriteActivity extends AppCompatActivity {
     private boolean writeResponseBodyToDisk(ResponseBody body) {
         try {
             // 파일명이 제목.wav가 되도록 함
-            File resultWavFile = new File("/sdcard/Download/Bigpie",titleValue + ".wav");
+            File resultWavFile = new File("/sdcard/Download",titleValue + ".wav");
             Log.d("knh", "Save in Disk ");
             InputStream inputStream = null;
             OutputStream outputStream = null;

@@ -14,8 +14,8 @@
         android:drawablePadding="5dip"
         android:text="진행 상황"
         android:textAlignment="center"
-        android:textColor="#000"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="#000" />
 
     <RelativeLayout
         android:id="@+id/relativelayout00"

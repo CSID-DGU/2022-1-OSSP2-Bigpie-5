@@ -10,16 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="나에게 들려주는 편지"
+        android:fontFamily="serif"
+        android:text="Letter For Me"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-        android:textSize="40sp" />
+        android:textSize="40sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/go_recording"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="100dp"
         android:background="@drawable/buttonshape"
         android:text="녹음하기" />
 

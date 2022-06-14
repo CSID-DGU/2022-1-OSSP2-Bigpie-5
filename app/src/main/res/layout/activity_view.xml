@@ -16,10 +16,23 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/textView10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="7dp"
+            android:text="제목"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/view_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView"
+            android:background="@drawable/edge"
             android:textColor="#000000"
             android:textSize="25sp"
             android:textStyle="bold" />
@@ -43,6 +56,7 @@
             android:layout_marginTop="10dp"
             android:padding="5dp"
             android:text="TextView"
+            android:background="@drawable/edge"
             android:textColor="#000000"
             android:textSize="16sp" />
     </LinearLayout>
@@ -68,25 +82,4 @@
 
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/state_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10sp"
-        android:layout_marginRight="10sp"
-        android:ellipsize="marquee"
-        android:gravity="center_vertical"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:scrollHorizontally="true"
-        android:singleLine="true"
-        android:text="연결중..."
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/seekbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 </LinearLayout>

@@ -68,7 +68,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder>{
 
         // 예약 날짜보다 지나야 버튼이 활성화
         String reserve_time = item.reserve;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date strDate = sdf.parse(reserve_time);
             if (new Date().before(strDate)) {

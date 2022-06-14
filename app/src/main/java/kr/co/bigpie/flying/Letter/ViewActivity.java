@@ -67,7 +67,6 @@ public class ViewActivity extends AppCompatActivity {
         }
 
         btnPause = (Button) findViewById(R.id.btnPlay);
-        txtState = (TextView) findViewById(R.id.state_text);
 
         btnPause.setOnClickListener(buttonPlayPauseOnClickListener);
 
@@ -102,22 +101,22 @@ public class ViewActivity extends AppCompatActivity {
         try {
             mediaPlayer.setDataSource(PATH_TO_FILE);
             mediaPlayer.prepare();
-            Toast.makeText(this, PATH_TO_FILE, Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, PATH_TO_FILE, Toast.LENGTH_LONG).show();
             stateMediaPlayer = STATE_NOTSTARTER;
             txtState.setText("연결 완료");
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
             stateMediaPlayer = STATEMP_ERROR;
             txtState.setText("- 에러!!! -");
         } catch (IllegalStateException e) {
             e.printStackTrace();
-            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
             stateMediaPlayer = STATEMP_ERROR;
             txtState.setText("- 에러!!! -");
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
             stateMediaPlayer = STATEMP_ERROR;
             txtState.setText("- 에러!!! -");
         }

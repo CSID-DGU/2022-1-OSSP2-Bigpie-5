@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import kr.co.bigpie.flying.R;
 
@@ -58,7 +60,6 @@ public class AudioAdapter extends RecyclerView.Adapter {
         return dataModels.size();
     }
 
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -70,7 +71,6 @@ public class AudioAdapter extends RecyclerView.Adapter {
         return viewHolder;
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         MyViewHolder myViewHolder = (MyViewHolder)holder;
@@ -81,6 +81,10 @@ public class AudioAdapter extends RecyclerView.Adapter {
         myViewHolder.audioTitle.setText(file.getName());
     }
 
+    /*public AudioAdapter sortData(){
+        Collections.sort(dataModels);
+        return this;
+    }*/
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageButton audioBtn;

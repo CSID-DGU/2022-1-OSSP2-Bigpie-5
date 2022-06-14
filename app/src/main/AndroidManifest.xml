@@ -33,9 +33,9 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".Recorder.VoiceRecord"/>
-        <activity android:name=".Letter.WriteActivity"/>
         <activity android:name=".Letter.ListActivity"/>
         <activity android:name=".Letter.ViewActivity"/>
+        <activity android:name=".Letter.WriteActivity"/>
         <receiver android:name=".AlarmRecevier"
             android:enabled="true"
             android:exported="false">
