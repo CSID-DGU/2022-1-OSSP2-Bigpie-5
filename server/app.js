@@ -18,25 +18,25 @@ const corsOptions = {
   optionSuccessStatus: 200,
 };
 
-// dotenv.config({ path: 'D:/projects/2022-1-OSSP2-Bigpie-5/server/.env' });
+dotenv.config({ path: 'D:/projects/2022-1-OSSP2-Bigpie-5/server/.env' });
 
-// const SECRET_KEY = process.env.SECRET_KEY;
+const SECRET_KEY = process.env.SECRET_KEY;
 
-// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.qq1ux.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.qq1ux.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
-// mongoose.connect(uri, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-//   serverApi: ServerApiVersion.v1,
-//   dbName: 'OSSP',
-// });
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
+  dbName: 'OSSP',
+});
 
-// const UserSchema = mongoose.Schema({
-//   email: String,
-//   password: String,
-// });
+const UserSchema = mongoose.Schema({
+  email: String,
+  password: String,
+});
 
-// const User = mongoose.model('users', UserSchema);
+const User = mongoose.model('users', UserSchema);
 
 let fileIndex = 1;
 
@@ -168,14 +168,6 @@ app.post('/voice', async (req, res) => {
     } else {
       const result = text.substring(first);
       texts.push(text.substring(first, last));
-
-      // if (
-      //   result[result.length] == text[text.length] &&
-      //   result[result.length - 1] == text[text.length - 1] &&
-      //   result[result.length - 2] == text[text.length - 2]
-      // ) {
-      //   break;
-      // }
     }
 
     first = last + 1;
@@ -333,39 +325,44 @@ app.post('/signup', async (req, res) => {
   const saltRounds = 10;
   const encrypted = await bcrypt.hash(password, saltRounds);
 
-  let found = false;
-  users.forEach((user) => {
-    if (user.email == email) {
-      res.json({ message: 'existing email' });
-      found = true;
-    }
-  });
-
-  if (!found) {
-    users.push({
+  User.findOne(
+    {
       email,
-      password: encrypted,
-    });
-
-    res.json({ message: 'success' });
-  }
+    },
+    (err, user) => {
+      if (user) {
+        res.json({ message: 'existing email' });
+      } else {
+        const newUser = new User({ email, password: encrypted });
+        newUser.save().then(() => {
+          res.json({ message: 'success' });
+        });
+      }
+    }
+  );
 });
 
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
-  users.forEach(async (user) => {
-    if (user.email == email) {
-      const found = await bcrypt.compare(password, user.password);
-      if (found) {
-        res.json({ id: email.substring(0, email.indexOf('@')) });
+  User.findOne(
+    {
+      email,
+    },
+    async (err, user) => {
+      if (!user) {
+        res.json({ message: 'wrong email' });
       } else {
-        res.json({ message: 'wrong password' });
+        const found = await bcrypt.compare(password, user.password);
+
+        if (found) {
+          res.json({ id: email.substring(0, email.indexOf('@')) });
+        } else {
+          res.json({ message: 'wrong password' });
+        }
       }
-    } else {
-      res.json({ message: 'wrong email' });
     }
-  });
+  );
 });
 
 // app.post('/signup', async (req, res) => {
@@ -374,44 +371,39 @@ app.post('/login', async (req, res) => {
 //   const saltRounds = 10;
 //   const encrypted = await bcrypt.hash(password, saltRounds);
 
-//   User.findOne(
-//     {
-//       email,
-//     },
-//     (err, user) => {
-//       if (user) {
-//         res.json({ message: 'existing email' });
-//       } else {
-//         const newUser = new User({ email, password: encrypted });
-//         newUser.save().then(() => {
-//           res.json({ message: 'success' });
-//         });
-//       }
+//   let found = false;
+//   users.forEach((user) => {
+//     if (user.email == email) {
+//       res.json({ message: 'existing email' });
+//       found = true;
 //     }
-//   );
+//   });
+
+//   if (!found) {
+//     users.push({
+//       email,
+//       password: encrypted,
+//     });
+
+//     res.json({ message: 'success' });
+//   }
 // });
 
 // app.post('/login', async (req, res) => {
 //   const { email, password } = req.body;
 
-//   User.findOne(
-//     {
-//       email,
-//     },
-//     async (err, user) => {
-//       if (!user) {
-//         res.json({ message: 'wrong email' });
+//   users.forEach(async (user) => {
+//     if (user.email == email) {
+//       const found = await bcrypt.compare(password, user.password);
+//       if (found) {
+//         res.json({ id: email.substring(0, email.indexOf('@')) });
 //       } else {
-//         const found = await bcrypt.compare(password, user.password);
-
-//         if (found) {
-//           res.json({ id: email.substring(0, email.indexOf('@')) });
-//         } else {
-//           res.json({ message: 'wrong password' });
-//         }
+//         res.json({ message: 'wrong password' });
 //       }
+//     } else {
+//       res.json({ message: 'wrong email' });
 //     }
-//   );
+//   });
 // });
 
 app.listen(8080, () => {
