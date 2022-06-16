@@ -237,6 +237,8 @@ let cnt_file = 0;
 let N = 7;
 
 app.post('/upload2', async (req, res) => {
+  console.log(req.file);
+
   try {
     if (!req.files) {
       res.send({
@@ -258,15 +260,7 @@ app.post('/upload2', async (req, res) => {
         },
       });
     }
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
-
-app.post('/upload', upload.any(), async (req, res) => {
-  cnt_file++;
-
-  console.log(req.file);
+  } catch (err) {}
 
   if (cnt_file == N) {
     await sleep(5000);
@@ -291,10 +285,21 @@ app.post('/upload', upload.any(), async (req, res) => {
 
     await sleep(10000);
 
-    const train = spawn('python', ['train.py', '--data_path=datasets/test']);
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    const train = spawn('python', ['train.py', '--data_path=datasets/test'], {
+      signal,
+    });
 
     train.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
+
+      const idx = data.indexOf('50000');
+
+      console.log('index: ', idx);
+
+      controller.abort();
     });
 
     train.stderr.on('data', (data) => {
@@ -303,14 +308,6 @@ app.post('/upload', upload.any(), async (req, res) => {
 
     train.on('close', (code) => {
       console.log(`train exited with code ${code}`);
-    });
-
-    res.json({
-      message: 'TTS model has started training',
-    });
-  } else {
-    res.json({
-      message: '.wav file successfully uploaded',
     });
   }
 });
