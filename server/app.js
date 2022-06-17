@@ -288,9 +288,17 @@ app.post('/upload2', async (req, res) => {
     const controller = new AbortController();
     const { signal } = controller;
 
-    const train = spawn('python', ['train.py', '--data_path=datasets/test'], {
-      signal,
-    });
+    const train = spawn(
+      'python',
+      [
+        'train.py',
+        '--data_path=datasets/test',
+        '--initialize_path=logs/pretrained_model',
+      ],
+      {
+        signal,
+      }
+    );
 
     train.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -299,7 +307,9 @@ app.post('/upload2', async (req, res) => {
 
       console.log('index: ', idx);
 
-      controller.abort();
+      if (idx >= 0) {
+        controller.abort();
+      }
     });
 
     train.stderr.on('data', (data) => {
